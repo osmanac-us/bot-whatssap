@@ -1,5 +1,5 @@
 {
-  "name": "Bot Atencion - Bazar La Esperanza",
+  "name": "Bot Atencion ",
   "nodes": [
     {
       "parameters": {
@@ -146,7 +146,7 @@
         "resource": "messages-api",
         "instanceName": "negocio",
         "remoteJid": "={{ $('Code').item.json.remitente }}",
-        "messageText": "📍 Estamos ubicados en el Parque Central, Barrio El Centro, 1 cuadra al oeste del parque, Danlí, El Paraíso.",
+        "messageText": "📍 Estamos ubicados en el Parque Central, Barrio El Centro, cuadra al oeste del parque.",
         "options_message": {}
       },
       "id": "cfc27751-c0ac-4d41-8505-ce3206e4882d",
@@ -174,7 +174,7 @@
         "resource": "messages-api",
         "instanceName": "negocio",
         "remoteJid": "={{ $('Code').item.json.remitente }}",
-        "messageText": "🚚 Sí, tenemos servicio a domicilio. Llama al 3178-7427 para más información.",
+        "messageText": "🚚 Sí, tenemos servicio a domicilio. Llama al 7855-1144 para más información.",
         "options_message": {}
       },
       "id": "cca5ff43-c3d1-4d93-97f1-5ca837ad2c49",
@@ -202,7 +202,7 @@
         "resource": "messages-api",
         "instanceName": "negocio ",
         "remoteJid": "={{ $('Code').item.json.remitente }}",
-        "messageText": "💳 Aceptamos efectivo y transferencia. Consulta por otros métodos al 3178-7427.",
+        "messageText": "💳 Aceptamos efectivo y transferencia. Consulta por otros métodos al 554466.",
         "options_message": {}
       },
       "id": "5d7c2a4d-dd34-4f0a-bf83-1e14338ec412",
