@@ -1,0 +1,374 @@
+{
+  "name": "Bot Atencion - Bazar La Esperanza",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "bot-atencion",
+        "options": {}
+      },
+      "id": "7b3b2b40-1eb0-43b2-960f-2e9a03993838",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-944, 176],
+      "webhookId": "bot-atencion"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json.body?.data || {};\n\n// Ignorar mensajes enviados por el propio bot\nif (data.key?.fromMe) return [];\n\nconst msg = data.message || {};\nconst texto = msg.conversation || msg.extendedTextMessage?.text || '';\n\n// Ignorar eventos que no son texto\nif (!texto) return [];\n\nconst mensaje = texto\n  .toLowerCase()\n  .normalize('NFD')\n  .replace(/[\\u0300-\\u036f]/g, ''); // quita tildes\n\nreturn [{\n  json: {\n    mensaje,\n    remitente: data.key.remoteJid.split('@')[0]\n  }\n}];"
+      },
+      "id": "3c688be6-9d8e-4dc9-8144-47c53b701cbe",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-688, 176]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 1 },
+                "conditions": [
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "horario", "operator": { "type": "string", "operation": "contains" }, "id": "945d30e2-0e6c-48ee-8192-ee50fe0569cc" },
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "hora", "operator": { "type": "string", "operation": "contains" }, "id": "37a8a14a-8ea6-46ad-9e24-78827b36028d" },
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "abierto", "operator": { "type": "string", "operation": "contains" }, "id": "42e35b58-b7e1-44ba-bdf7-c2c72b1e2c9f" }
+                ],
+                "combinator": "or"
+              },
+              "renameOutput": true,
+              "outputKey": "horario"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 1 },
+                "conditions": [
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "ubicacion", "operator": { "type": "string", "operation": "contains" }, "id": "faad03f8-4fc4-445a-849c-081c202447e4" },
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "direccion", "operator": { "type": "string", "operation": "contains" }, "id": "0614d462-0a4d-4d75-8516-7fb04e5ba35b" },
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "donde", "operator": { "type": "string", "operation": "contains" }, "id": "20b984de-0a5c-4b0d-8400-c4db6158716b" }
+                ],
+                "combinator": "or"
+              },
+              "renameOutput": true,
+              "outputKey": "ubicacion"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 1 },
+                "conditions": [
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "telefono", "operator": { "type": "string", "operation": "contains" }, "id": "73bb288a-89eb-4d24-959b-7072f1270866" },
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "contacto", "operator": { "type": "string", "operation": "contains" }, "id": "6bbf3f33-fd96-4dd2-8afd-20f0ae4b1512" },
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "numero", "operator": { "type": "string", "operation": "contains" }, "id": "f5e7d427-d752-45b5-a0dd-048ce4238149" }
+                ],
+                "combinator": "or"
+              },
+              "renameOutput": true,
+              "outputKey": "telefono"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 1 },
+                "conditions": [
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "domicilio", "operator": { "type": "string", "operation": "contains" }, "id": "a1037df9-0b4c-4432-97b8-3e6d8071b27f" },
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "envio", "operator": { "type": "string", "operation": "contains" }, "id": "4c2ba4b2-1271-47fe-833d-70013dcf88a2" },
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "entrega", "operator": { "type": "string", "operation": "contains" }, "id": "92e9b759-ac1a-419e-8443-9f8cde2c4388" }
+                ],
+                "combinator": "or"
+              },
+              "renameOutput": true,
+              "outputKey": "domicilio"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 1 },
+                "conditions": [
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "precio", "operator": { "type": "string", "operation": "contains" }, "id": "7509ea9a-9f7b-4481-a347-bea2ecda95dd" },
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "cuanto", "operator": { "type": "string", "operation": "contains" }, "id": "7f26689c-fe54-463a-936d-69e920afce2f" },
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "cuesta", "operator": { "type": "string", "operation": "contains" }, "id": "aff7037d-de6b-453f-89dc-ab04d859f06a" }
+                ],
+                "combinator": "or"
+              },
+              "renameOutput": true,
+              "outputKey": "precio"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 1 },
+                "conditions": [
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "pago", "operator": { "type": "string", "operation": "contains" }, "id": "f072964f-f635-4a6c-afd5-4b1d7d966849" },
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "pagar", "operator": { "type": "string", "operation": "contains" }, "id": "e8f2845d-b3fe-46a1-9620-f494e60fcb16" },
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "tarjeta", "operator": { "type": "string", "operation": "contains" }, "id": "4528d9ff-a621-4707-8b20-1b0374ede45d" }
+                ],
+                "combinator": "or"
+              },
+              "renameOutput": true,
+              "outputKey": "pago"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 1 },
+                "conditions": [
+                  { "leftValue": "={{ $json.mensaje }}", "rightValue": "gracias", "operator": { "type": "string", "operation": "contains" }, "id": "6d3e4aee-ecc8-45d8-9fd6-516eddd6d238" }
+                ],
+                "combinator": "or"
+              },
+              "renameOutput": true,
+              "outputKey": "gracias"
+            }
+          ]
+        },
+        "options": { "fallbackOutput": "extra" }
+      },
+      "id": "2d7a8280-d7e4-4538-9427-896fdeb7f1a6",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [-384, 80]
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "negocio",
+        "remoteJid": "={{ $('Code').item.json.remitente }}",
+        "messageText": "🕐 Nuestro horario es de lunes a sábado, de 8:00 a.m. a 5:30 p.m. Los domingos permanecemos cerrados.",
+        "options_message": {}
+      },
+      "id": "4c1385cf-9564-43ae-88b7-3cd67e6c2b4a",
+      "name": "Responder Horario",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [64, -256]
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "negocio",
+        "remoteJid": "={{ $('Code').item.json.remitente }}",
+        "messageText": "📍 Estamos ubicados en el Parque Central, Barrio El Centro, 1 cuadra al oeste del parque, Danlí, El Paraíso.",
+        "options_message": {}
+      },
+      "id": "cfc27751-c0ac-4d41-8505-ce3206e4882d",
+      "name": "Responder Ubicacion",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [64, -96]
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "negocio",
+        "remoteJid": "={{ $('Code').item.json.remitente }}",
+        "messageText": "📞 Puedes contactarnos al 3178-7427.",
+        "options_message": {}
+      },
+      "id": "ef0155e1-431c-4370-b097-021205d84060",
+      "name": "Responder Telefono",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [64, 64]
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "negocio",
+        "remoteJid": "={{ $('Code').item.json.remitente }}",
+        "messageText": "🚚 Sí, tenemos servicio a domicilio. Llama al 3178-7427 para más información.",
+        "options_message": {}
+      },
+      "id": "cca5ff43-c3d1-4d93-97f1-5ca837ad2c49",
+      "name": "Responder Domicilio",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [64, 208]
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "negocio",
+        "remoteJid": "={{ $('Code').item.json.remitente }}",
+        "messageText": "💰 Los precios varían según el producto. ¿Cuál te interesa? Un asesor te atenderá pronto.",
+        "options_message": {}
+      },
+      "id": "03d1f0b6-a264-4e3c-923f-5ac295a38da5",
+      "name": "Responder Precio",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [64, 368]
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "negocio ",
+        "remoteJid": "={{ $('Code').item.json.remitente }}",
+        "messageText": "💳 Aceptamos efectivo y transferencia. Consulta por otros métodos al 3178-7427.",
+        "options_message": {}
+      },
+      "id": "5d7c2a4d-dd34-4f0a-bf83-1e14338ec412",
+      "name": "Responder Pago",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [64, 528]
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "negocio",
+        "remoteJid": "={{ $('Code').item.json.remitente }}",
+        "messageText": "¡Con gusto! ¿Hay algo más en lo que pueda ayudarte? 😊",
+        "options_message": {}
+      },
+      "id": "7c01705b-866f-448a-a495-9cdd6299ea1a",
+      "name": "Responder Gracias",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [64, 672]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "TU_ID_DE_GOOGLE_SHEETS_AQUI",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1317927221,
+          "mode": "list",
+          "cachedResultName": "Inventario de Bazar - Control de Productos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEETS_AQUI/edit#gid=1317927221"
+        },
+        "filtersUI": { "values": [] },
+        "options": {}
+      },
+      "id": "89eb3c18-f451-44fc-a4af-82a3f7331ba7",
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [128, 1184]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 1 },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{ $json[\"Nombre del Producto\"] }}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "notEmpty" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "8c0b924b-3dee-4537-a1d7-036eaa1ab200",
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [624, 1184]
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "negocio",
+        "remoteJid": "=={{ $('Code').item.json.remitente }}",
+        "messageText": "=📦 *{{ $json[\"Nombre del Producto\"] }}*\n\n💰 Precio: ${{ $json[\"Precio de Venta (USD)\"] }}\n📊 Stock: {{ $json[\"Cantidad en Stock\"] }} unidades",
+        "options_message": {}
+      },
+      "id": "1a0fa664-c70e-49ec-bb70-347e7143c900",
+      "name": "Evolution API - Enviar",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [912, 1008]
+    },
+    {
+      "parameters": {
+        "jsCode": "const productos = items;\nconst mensaje = $('Code').item.json.mensaje.toLowerCase();\n\nconst resultado = productos.filter(producto => {\n  const nombre = producto.json[\"Nombre del Producto\"].toLowerCase();\n  return nombre.includes(mensaje);\n});\n\n// Si encontró producto, devuelve ese producto; si no, devuelve un objeto vacío\nif (resultado.length > 0) {\n  return [{ json: resultado[0].json }];\n} else {\n  return [{ json: {} }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [368, 1184],
+      "id": "7ccd251f-6739-4d40-b5b0-50102e39e12f",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=TU_API_KEY_DE_GEMINI_AQUI",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [{\n    \"parts\": [{\n      \"text\": \"Eres el asistente virtual de Bazar La Esperanza. Responde de forma amable y breve en español. Información del negocio: Horario: Lunes a sábado de 8:00 am a 5:30 pm, domingos cerrado. Ubicación: Parque Central, Barrio El Centro, 1 cuadra al oeste, Danlí, El Paraíso. Teléfono: 3178-7427. Servicio a domicilio: Sí, llamar al 3178-7427. El cliente dice: {{ $('Code').item.json.mensaje }}\"\n    }]\n  }]\n}",
+        "options": { "response": { "response": {} } }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [912, 1264],
+      "id": "eacccf5b-7a80-473c-bd4f-1be38f60498c",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json.body || $json;\nconst respuesta = data.candidates[0].content.parts[0].text;\nreturn [{ json: { respuesta: respuesta } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1200, 1264],
+      "id": "b819e9ec-5181-46e6-a971-4afd7a6a2863",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "negocio",
+        "remoteJid": "=={{ $('Code').item.json.remitente }}",
+        "messageText": "=={{ $json.respuesta }}",
+        "options_message": {}
+      },
+      "id": "5ca54ed7-3fe8-4994-91fd-3577164f08f0",
+      "name": "Evolution API - IA",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [1504, 1264]
+    }
+  ],
+  "connections": {
+    "Webhook": { "main": [[{ "node": "Code", "type": "main", "index": 0 }]] },
+    "Code": { "main": [[{ "node": "Switch", "type": "main", "index": 0 }]] },
+    "Switch": {
+      "main": [
+        [{ "node": "Responder Horario", "type": "main", "index": 0 }],
+        [{ "node": "Responder Ubicacion", "type": "main", "index": 0 }],
+        [{ "node": "Responder Telefono", "type": "main", "index": 0 }],
+        [{ "node": "Responder Domicilio", "type": "main", "index": 0 }],
+        [{ "node": "Responder Precio", "type": "main", "index": 0 }],
+        [{ "node": "Responder Pago", "type": "main", "index": 0 }],
+        [{ "node": "Responder Gracias", "type": "main", "index": 0 }],
+        [{ "node": "Google Sheets", "type": "main", "index": 0 }]
+      ]
+    },
+    "Google Sheets": { "main": [[{ "node": "Code in JavaScript", "type": "main", "index": 0 }]] },
+    "IF": {
+      "main": [
+        [{ "node": "Evolution API - Enviar", "type": "main", "index": 0 }],
+        [{ "node": "HTTP Request", "type": "main", "index": 0 }]
+      ]
+    },
+    "Code in JavaScript": { "main": [[{ "node": "IF", "type": "main", "index": 0 }]] },
+    "HTTP Request": { "main": [[{ "node": "Code in JavaScript1", "type": "main", "index": 0 }]] },
+    "Code in JavaScript1": { "main": [[{ "node": "Evolution API - IA", "type": "main", "index": 0 }]] }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "timezone": "America/Tegucigalpa"
+  }
+}
